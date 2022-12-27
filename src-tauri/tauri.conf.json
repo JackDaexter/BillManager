@@ -11,6 +11,13 @@
   },
   "tauri": {
     "allowlist": {
+      "fs": {
+        "all": true,
+        "readFile": true,
+        "writeFile": true,
+        "readDir": true,
+        "exists": true
+      },
       "dialog": {
         "all": true,
         "open": true,
