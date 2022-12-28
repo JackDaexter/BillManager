@@ -1,19 +1,33 @@
 import './Home.css'
+import PdfPreview from "../component/PdfPreview";
+import {useState} from "react";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import LoadButton from "../component/LoadButton/LoadButton";
+import DarkInput from "../component/DarkInput";
 import ParsePdfFile from "../services/ParsePdfFile";
-import PdfPreview from "../component/PdfView";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 
+const Home = (props  : any) => {
 
-const Home = () => {
-
+    const [filePath, setFilePath] = useState("");
+    
+    const fileIsLoad = () => {
+        console.log("sdfsdfsd")
+        return filePath !== "file not found"
+    }
+    
+    const parsePdfFile = async () => {
+        var filePath = await ParsePdfFile()
+        setFilePath( _ => filePath);
+    }
+    
     return (
         <div className="container" >
             
             <div className="title-section">
                 <h1>Welcome to Bill Manager! 📝</h1>
             </div>
-            
+
             <Tabs >
                 <TabList>
                     <Tab>Gestion fichier</Tab>
@@ -21,31 +35,19 @@ const Home = () => {
                 </TabList>
                 <TabPanel>
                     <div className="pdfpreview-section">
-                        <PdfPreview />
-                    </div>
-                    <div className="loadfolder-input-section">
-                        <input id="load_file_path"  />
-                        <button className="load_file" disabled={true} >Charger un dossier</button>
-                    </div>
-                </TabPanel>
-                <TabPanel>
-                    <div className="pdfpreview-section">
-                        <PdfPreview />
+                        <PdfPreview props={{isFile:fileIsLoad()}}/>
                     </div>
                     <div className="choice-analysis-section">
-
-
                         <div className="loadfile-input-section">
-                            <input id="load_file_path"  />
-                            <button onClick={ParsePdfFile}>Charger un fichier</button>
+                            <DarkInput props={{text : filePath}} />
+                            <LoadButton props={{buttonName: "Charger fichier", onClick : parsePdfFile }}/>
                         </div>
                     </div>
                 </TabPanel>
             </Tabs>
-           
             
             <div className="save-section">
-                <button className="save-file" onClick={ParsePdfFile}>Sauvegarder</button>
+                <LoadButton props={{buttonName:"Sauvegarder le fichier" }} />
             </div>
         </div>
     )
