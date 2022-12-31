@@ -1,0 +1,26 @@
+.container{
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 25px;
+    
+}
+
+.pdfpreview-section{
+    background-color: red;
+}
+
+.choice-analysis-section{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.title-section{
+    display: flex;
+    justify-content: center;
+}
+
