@@ -11,11 +11,11 @@ const pdf = require("pdf-parse");
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 600,
+    height: 400,
     webPreferences: {
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration : false,
+      preload: path.join(__dirname, './preload.js')
     },
   });
 
@@ -45,6 +45,32 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+
+ipcMain.handle("parsePdfContent", async (e, a) => {
+  let dialogData  =  await dialog.showOpenDialog({ properties: ['openFile'], filters : [{ name: 'Pdf', extensions: ['pdf'] }] })
+ 
+  if(dialogData.filePaths[0] !== undefined){
+    const filePath = dialogData.filePaths[0];
+    let pdfDataInBuffer = fs.readFileSync(filePath);
+    let pdfText = [filePath];
+    let pdfData = await pdf(pdfDataInBuffer);
+    
+    let pdfTextInArray =  pdfText.concat((pdfData.text.split("\n")));
+
+    return {
+      name : filePath,
+      text: pdfTextInArray,
+      buffer: pdfDataInBuffer
+    };
+  }
+  
+  return {
+    name : 'No file selected',
+    text: [],
+    buffer: null
+  }
+})
 
 
 

@@ -2,7 +2,7 @@ import './LoadButton.css';
 
 
 
-const LoadButton = ({props}: { props: any }) => {
+const LoadButton = ({props}) => {
     return (
         <>
             <button className="load_file" 

@@ -1,19 +1,20 @@
-.container{
+.home-content{
     margin: 0;
-    height: 100%;
-    width: 100%;
-    
+
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 2fr ;
     row-gap: 25px;
-    
+
 }
 
 .pdfpreview-section{
     background-color: red;
+    height: 50px;
+
 }
 
 .choice-analysis-section{
+    
     display: flex;
     gap: 10px;
     justify-content: center;

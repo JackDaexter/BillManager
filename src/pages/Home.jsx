@@ -1,5 +1,4 @@
 import './Home.css'
-import PdfPreview from "../component/PdfPreview";
 import {useState} from "react";
 import LoadButton from "../component/LoadButton/LoadButton";
 import DarkText from "../component/DarkText";
@@ -7,36 +6,42 @@ import DarkText from "../component/DarkText";
 function Home ()  {
 
     const [filePath, setFilePath] = useState("");
+    const [pdfContent, setpdfContent] = useState(null);
     
     const fileIsLoad = () => {
-        return filePath !== "file not found"
+        console.log("WELL : " + filePath.includes("pdf"))
+        return filePath.includes("pdf")
     }
     
     const parsePdfFile = async () => {
-        const textFromPdf = await api.parsePdfContent();
-        console.log(result);
+        const result = await window.api.parsePdfContent();
+        if(result.name.includes("pdf")){
+            setFilePath( _ => result.name);
+            setpdfContent(_ => result.buffer);
+            console.log(fileIsLoad());
+        }
     }
     
+    const getFileName = (filePath) => {
+        if(filePath.includes(".pdf"))
+            return filePath.split("\\").pop();
+        return "Choisissez une facture à traiter ...";
+    } 
+    
     return (
-        <div className="container" >
+        <div className="home-content" >
             
             <div className="title-section">
                 <h1>Welcome to Bill Manager! 📝</h1>
             </div>
             
-            <div className="pdfpreview-section">
-                <PdfPreview props={{isFile:fileIsLoad()}}/>
-            </div>
             <div className="choice-analysis-section">
                 <div className="loadfile-input-section">
-                    <DarkText>{filePath} </DarkText>
-                    <LoadButton props={{buttonName: "Charger fichier", onClick : parsePdfFile }}/>
+                    <DarkText>{getFileName(filePath)} </DarkText>
+                    <LoadButton props={{buttonName: "Choisir un une facture", onClick : parsePdfFile }}/>
                 </div>
             </div>
-            
-            <div className="save-section">
-                <LoadButton props={{buttonName:"Sauvegarder le fichier" }} />
-            </div>
+           
         </div>
     )
 }

@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } =  require ('electron');
+const api = "api"
 
-contextBridge.exposeInMainWorld("api", {
-    parsePdfContent: (arg) => ipcRenderer.invoke("parsePdfContent")
+contextBridge.exposeInMainWorld(api, {
+    parsePdfContent: (channel, data) => ipcRenderer.invoke("parsePdfContent")
 })

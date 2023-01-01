@@ -1,10 +1,10 @@
 const{dialog} = require("electron");
 const fs = require("fs");
 const pdf = require ("pdf-parse");
-
+const {ipcMain} = global.share;
 
 module.exports = {
-    parsePdfContent : global.share.ipcMain.handle("parsePdfContent", async (e,a) =>{
+    TODO : ipcMain.handle("TODO", async (e, a) =>{
         let result = await  dialog.showOpenDialog({ properties: ['openFile'], filters : [{ name: 'Pdf', extensions: ['pdf'] }] })
 
         let pdfDataInBuffer = fs.readFileSync(result.filePaths[0]);
