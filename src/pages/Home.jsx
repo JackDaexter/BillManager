@@ -6,7 +6,6 @@ import DarkText from "../component/DarkText";
 function Home ()  {
 
     const [filePath, setFilePath] = useState("");
-    const [pdfContent, setpdfContent] = useState(null);
     
     const fileIsLoad = () => {
         console.log("WELL : " + filePath.includes("pdf"))
@@ -14,11 +13,10 @@ function Home ()  {
     }
     
     const parsePdfFile = async () => {
-        const result = await window.api.parsePdfContent();
-        if(result.name.includes("pdf")){
-            setFilePath( _ => result.name);
-            setpdfContent(_ => result.buffer);
-            console.log(fileIsLoad());
+        const dataFromPdf = await window.api.parsePdfContent();
+        if(dataFromPdf.name.includes("pdf")){
+            setFilePath( _ => dataFromPdf.name);
+            const dataHasBeenWrite = await window.api.writeInExcel();
         }
     }
     

@@ -1,5 +1,6 @@
-const {TODO} = require('./apiCall')
+const {parsePdf, writeExcel} = require('./apiCall')
 
 module.exports = {
-    TODO
+    parsePdf,
+    writeExcel
 }
