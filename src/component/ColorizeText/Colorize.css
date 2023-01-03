@@ -1,0 +1,24 @@
+p{
+    borderRadius: "1px";
+    border: "1px solid transparent";
+    padding: "0.5rem 2rem 0rem 0";
+    fontSize: "1.200rem";
+    fontFamily: "inherit";
+    color: green;
+    transition: "borderColor 0.25s";
+}
+
+
+p:hover{
+    display: "dfsdf";
+    cursor: pointer ;
+    borderRadius: "1px";
+    border: "1px solid transparent";
+    padding: "0.5rem 2rem 0rem 0";
+    fontSize: "1.125rem";
+    fontFamily: "inherit";
+    color: green;
+    background-color: yellow;
+    content: "Changer le theme";
+    transition: "borderColor 0.25s";
+}

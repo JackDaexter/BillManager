@@ -3,6 +3,8 @@ const fs = require("fs");
 const pdf = require ("pdf-parse");
 const exceljs = require("exceljs");
 const {ipcMain} = global.share;
+const Store = require('electron-store');
+const {retrieveDataToPutInExcel} = require('./excelManager')
 
 async function createNonExistingExcel(){
     const workbook = new exceljs.Workbook();
@@ -22,44 +24,74 @@ async function createNonExistingExcel(){
 
 }
 
+
+async function pdfFileDataInformation(dialogFileData) {
+    const pdfFileInfo = dialogFileData.filePaths[0];
+    let pdfDataInBuffer = fs.readFileSync(pdfFileInfo);
+    let pdfContent = await pdf(pdfDataInBuffer);
+
+    let pdfContentInArray = pdfContent.text.split("\n");
+
+    let lastSplitIndex = pdfFileInfo.lastIndexOf("\\");
+    const filePath = pdfFileInfo.slice(0, lastSplitIndex);
+
+    return {
+        name: pdfFileInfo,
+        text: pdfContentInArray,
+        pdfPath: filePath,
+        buffer: pdfDataInBuffer
+    }
+}
+
+
 module.exports = {
     parsePdf : ipcMain.handle("parsePdfContent", async (e, a) =>{
-        let dialogData  =  await dialog.showOpenDialog({ properties: ['openFile'], filters : [{ name: 'Pdf', extensions: ['pdf'] }] })
+        let dialogFileData  =  await dialog.showOpenDialog({ properties: ['openFile'], filters : [{ name: 'Pdf', extensions: ['pdf'] }] })
 
-        if(dialogData.filePaths[0] !== undefined){
-            const filePath = dialogData.filePaths[0];
-            let pdfDataInBuffer = fs.readFileSync(filePath);
-            let pdfText = [filePath];
-            let pdfData = await pdf(pdfDataInBuffer);
-
-            let pdfTextInArray =  pdfText.concat((pdfData.text.split("\n")));
-
-            return {
-                name : filePath,
-                text: pdfTextInArray,
-                buffer: pdfDataInBuffer
-            };
+        if(dialogFileData.filePaths[0] !== undefined){
+            return await pdfFileDataInformation(dialogFileData);
         }
 
         return {
             name : 'No file selected',
             text: [],
+            pdfPath  : null,
             buffer: null
         }
     }),
-    
-    writeExcel : ipcMain.handle('writeInExcel', async  (event,args) => {
-        let nameFileExcel = 'cc2.xlsx'
+
+    writeParsedDataInExcel : ipcMain.handle('writeParsedDataInExcel', async  (events,excelFileName,pdfData) => {
         const workbook = new exceljs.Workbook();
-        workbook.xlsx.readFile(nameFileExcel)
+        workbook.xlsx.readFile(excelFileName)
             .then(function()  {
-                const worksheet = workbook.getWorksheet(2);
+                const billData = retrieveDataToPutInExcel(pdfData)
+           /*     const worksheet = workbook.getWorksheet(2);
                 const lastRow = worksheet.lastRow;
                 const getRowInsert = worksheet.getRow(++(lastRow.number));
                 getRowInsert.getCell('A').value = 'yo';
                 getRowInsert.commit();
-                return workbook.xlsx.writeFile(nameFileExcel);
+                return workbook.xlsx.writeFile(excelFileName);*/
             }).catch(createNonExistingExcel);
+    }),
+    
+    selectExcelFile : ipcMain.handle('selectExcelFile', async  (event,args) => {
+        let dialogFileData  =  await dialog.showOpenDialog({ properties: ['openFile'], filters : [{ name: 'Excel', extensions: ['xlsx','xlsm'] }] })
+       
+        if(dialogFileData.canceled === false){
+            return dialogFileData.filePaths[0];
+        }
+
+        return undefined
+    }),
+    
+    saveExcelFileNameInLocalDb : ipcMain.handle('saveExcelFileNameInLocalDb', async  (event,args) => {
+        const store = new Store();
+        store.set('excelFileName', args);
+    }),
+    
+    checkIfExcelFileHasBeenSelectedPreviously : ipcMain.handle('checkIfExcelFileHasBeenSelectedPreviously', async  (event,args) => {
+        const store = new Store();
+        return store.get('excelFileName');
     })
 }
 

@@ -11,7 +11,7 @@ const pdf = require("pdf-parse");
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 600,
+    width: 800,
     height: 400,
     webPreferences: {
       nodeIntegration : false,

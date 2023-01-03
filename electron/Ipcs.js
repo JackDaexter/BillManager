@@ -1,6 +1,9 @@
-const {parsePdf, writeExcel} = require('./apiCall')
+const {parsePdf, saveExcelFileNameInLocalDb, writeParsedDataInExcel, checkIfExcelFileHasBeenSelectedPreviously, selectExcelFile} = require('./apiCall')
 
 module.exports = {
     parsePdf,
-    writeExcel
+    writeParsedDataInExcel,
+    checkIfExcelFileHasBeenSelectedPreviously,
+    selectExcelFile,
+    saveExcelFileNameInLocalDb
 }

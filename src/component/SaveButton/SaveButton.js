@@ -1,11 +1,9 @@
-import 'SaveButton.css'
+import './SaveButton.css'
 
 
-const SaveButton = ({props}: { props: any }) => {
+const SaveButton = ({props}) => {
     return (
-        <>
-            <button className="load_file" disabled={false}> {props.buttonName}</button>
-        </>
+        <button className="save_button" disabled={false}> {props.buttonName}</button>
     )
 }
 
