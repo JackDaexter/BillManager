@@ -21,13 +21,13 @@
     "react-pdf": "^6.2.1",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.6",
+    "electron-is-dev": "^2.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "test": "react-scripts test",    "eject": "react-scripts eject",
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron .",
     "build:publish": "react-scripts build && electron-builder --win --publish always"
@@ -38,7 +38,12 @@
     "directories": {
       "output": "electron-build",
       "buildResources": "build-assets"
-    }
+    },
+    "win": {
+			"publish": [
+				"github"
+			]
+		}
   },
   "eslintConfig": {
     "extends": [
@@ -61,7 +66,6 @@
   "devDependencies": {
     "concurrently": "^7.6.0",
     "electron": "^22.0.0",
-    "electron-is-dev": "^2.0.0",
     "wait-on": "^7.0.1"
   }
 }
