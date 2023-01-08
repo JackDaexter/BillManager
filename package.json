@@ -1,15 +1,17 @@
 {
   "name": "billmanagerjs",
+  "author":"JackDaexter",
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
-  "main": "electron/main.js",
+  "main": "electron/electron.js",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "cross-env": "^7.0.3",
     "electron-store": "^8.1.0",
+    "electron-updater": "^5.3.0",
     "exceljs": "^4.3.0",
     "pdf-parse": "^1.1.1",
     "pdf.js-extract": "^0.2.1",
@@ -27,7 +29,16 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron ."
+    "electron": "wait-on tcp:3000 && electron .",
+    "build:publish": "react-scripts build && electron-builder --win --publish always"
+  },
+  "build": {
+    "extends": null,
+    "productName": "BillManager",
+    "directories": {
+      "output": "electron-build",
+      "buildResources": "build-assets"
+    }
   },
   "eslintConfig": {
     "extends": [

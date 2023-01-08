@@ -1,6 +1,7 @@
 // ./public/electron.js
 const path = require('path');
 const { app, BrowserWindow, ipcMain, dialog} = require('electron');
+const {autoUpdater} = require('electron-updater')
 const isDev = require('electron-is-dev');
 global.share = {ipcMain};
 
@@ -29,6 +30,10 @@ function createWindow() {
   // Open the DevTools.
   if (isDev) {
     win.webContents.openDevTools({ mode: 'detach' });
+  } 
+  
+  if (!isDev) {
+    autoUpdater.checkForUpdates();
   }
 }
 
@@ -45,6 +50,20 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+autoUpdater.on("update-available", (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Ok'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version is being downloaded.'
+  }
+  dialog.showMessageBox(dialogOpts, (response) => {
+
+  });
+})
+
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
