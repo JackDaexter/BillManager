@@ -10,6 +10,9 @@
 }
 
 .loadfile-input-section{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
     margin-top: 1rem;
 }
 

@@ -10,6 +10,6 @@ export const getExcelNameAndSaveInDb = async () => {
 export const getExcelFileName = (excelFilePath) => {
     const messageDefault = "Par defaut un fichier excel nommé excel.xlxs sera créer dans le dossier (Cliquez pour changer)"
     if(!excelFilePath) return messageDefault ;
-    return excelFilePath;
+    return excelFilePath + "   (Cliquez pour changer)";
 }
     

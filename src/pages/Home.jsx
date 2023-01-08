@@ -4,6 +4,8 @@ import LoadButton from "../component/LoadButton/LoadButton";
 import ColorizeText from "../component/ColorizeText/ColorizeText";
 import {getPdfFileName} from "../utils/GetPdfFileName";
 import {getExcelNameAndSaveInDb, getExcelFileName} from "../utils/GetExcelNameAndSaveInDb";
+import ConsoleError from "../component/ConsoleError";
+import ReactLoading from 'react-loading';
 
 
 const fileData = {
@@ -17,9 +19,11 @@ function Home ()  {
 
     const [pdfInformation, setPdfInformation] = useState(fileData);
     const [excelFilePath, setExcelPath] = useState(__dirname);
+    const [infoInExcel, setInfoInExcel] = useState(undefined);
+    const [isLoading, setIsLoading] = useState(false);
 
 
-    const setInfo = (dataFromPdf) => {
+    const setPdfInfo = (dataFromPdf) => {
         setPdfInformation( _ => {
             return {  
                 name : dataFromPdf.name,
@@ -36,21 +40,31 @@ function Home ()  {
         if(!dataFromPdf) return;
         
         if(dataFromPdf.name.includes("pdf")){
-            setInfo(dataFromPdf);
-            await window.api.writeParsedDataInExcel(excelFilePath,dataFromPdf);
+            setPdfInfo(dataFromPdf);
+            setIsLoading(true)
+            const infoInExcel = await window.api.writeParsedDataInExcel(excelFilePath,dataFromPdf);
+            setInfoInExcel(infoInExcel);
+            setIsLoading(false)
+
         }
     }
 
     const selectExcelFile = async () => {
-        console.log("getExcelNameAndSaveInDb")
-
         const excelFilePath = await getExcelNameAndSaveInDb();
+        
         if(!excelFilePath) return;
-
-        console.log("setExcelPath")
-
+        
         setExcelPath( _ => excelFilePath);
     } 
+    
+    
+    const displayAppropiateLogo = () => {
+        if(isLoading){
+            return (
+                <ReactLoading type={"spin"} color={"blue"} height={'20px'} width={'20px'} />
+            );
+        }
+    }
     
     useEffect( () => {
         const fetch = async () => {
@@ -71,14 +85,19 @@ function Home ()  {
             <div className="choice-analysis-section">
                 <div className="loadfile-input-section">
                     <LoadButton props={{buttonName: getPdfFileName(pdfInformation.name), onClick : parsePdfFileAndWriteInExcel }}/>
+                    <div>{displayAppropiateLogo()}</div>
+                </div>
+                <div  className="unanalyzed-data-input-section">
+                    <ConsoleError dataToDisplay={infoInExcel}/>
                 </div>
                 <div className="saveExcel-section">
                     <ColorizeText props={{isLoad: true, HoverText: "Choisir un fichier existant", text: getExcelFileName(excelFilePath), onClick: selectExcelFile}}/>
                 </div>
             </div>
-           
+            
         </div>
     )
 }
+
 
 export default Home;
