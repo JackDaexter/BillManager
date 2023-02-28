@@ -15,6 +15,13 @@ const fileData = {
     buffer: null
 }
 
+async function extractedPdfInfo(excelFilePath, dataFromPdf) {
+    if (excelFilePath === "/" || excelFilePath === "\\")
+        return await window.api.writeParsedDataInExcel(dataFromPdf.pdfPath, dataFromPdf);
+    else
+        return await window.api.writeParsedDataInExcel(excelFilePath, dataFromPdf);
+}
+
 function Home ()  {
 
     const [pdfInformation, setPdfInformation] = useState(fileData);
@@ -42,7 +49,9 @@ function Home ()  {
         if(dataFromPdf.name.includes("pdf")){
             setPdfInfo(dataFromPdf);
             setIsLoading(true)
-            const infoInExcel = await window.api.writeParsedDataInExcel(excelFilePath,dataFromPdf);
+            var infoInExcel;
+            infoInExcel = await extractedPdfInfo(excelFilePath, dataFromPdf);
+            
             setInfoInExcel(infoInExcel);
             setIsLoading(false)
 

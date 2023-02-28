@@ -16,7 +16,8 @@ async function createNonExistingExcel(excelFileName, pdfData){
     setWorksheetColumn(worksheet);
     addFirstBillRow(lastEmptyRow, billData, worksheet)
     addSecondBillRow(lastEmptyRow, billData,worksheet)
-    await workbook.xlsx.writeFile(excelFileName);
+    
+    await workbook.xlsx.writeFile(excelFileName+"/Factures.xlsx");
 
     return  billData
 }
